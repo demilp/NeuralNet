@@ -7,14 +7,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def run():
-    #mnist = fetch_mldata('MNIST original')
-    #X = mnist['data'].astype(float)
-    #y = mnist['target'].astype(int)
+    mnist = fetch_mldata('MNIST original')
+    X = mnist['data'].astype(float)
+    y = mnist['target'].astype(int)
     ss = StandardScaler()
-    #X = ss.fit_transform(X)
-    #Y = convertToOneHot(y)
+    X = ss.fit_transform(X)
+    Y = convertToOneHot(y)
 
-    #X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
    #  X = np.array(
    #  [ [ 0.1682942,-0.1922795],
    #     [0.1818595,-0.1501974],
@@ -50,32 +50,32 @@ def run():
    # [0,   0,   0,   1],
    # [1,   0,   0,   0]])
 
-    #nn = NeuralNet()
-    #nn.fit(X_train, Y_train, [25], 0, epochs=15, gradient_method='SGD', learning_rate=10)
-    #nn.fit(X_train, Y_train, [25], 0.1, epochs=15, gradient_method='SGD', initial_weights=np.load('weights.npy'), learning_rate=0.1)
-    #np.save('weights', nn.weights)
-
-    #index = 67
-    #some_digit = X_test[index]
-    #some_digit_image = some_digit.reshape(28, 28)
-    #print('Y = ')
-    #print(Y_test[index])
-    #p = nn.predict(X_test[index][np.newaxis])
-    #print(p[0])
-
-    X = np.array([[-3],[-2],[3],[2]])
-    z = np.zeros((2, 1))
-    o = np.ones((2, 1))
-    Y = np.concatenate((z, o), axis=0)
-
     nn = NeuralNet()
-    nn.fit(X, Y, None, 1, 20, 'BGD')
+    nn.fit(X_train, Y_train, [25], 0.001, epochs=300, gradient_method='BGD')
+    #nn.fit(X_train, Y_train, [25], 0.1, epochs=15, gradient_method='SGD', initial_weights=np.load('weights.npy'), learning_rate=0.1)
+    np.save('weights', nn.weights)
+
+    index = 67
+    some_digit = X_test[index]
+    some_digit_image = some_digit.reshape(28, 28)
+    print('Y = ')
+    print(Y_test[index])
+    p = nn.forward(X_test[index][np.newaxis].T)
+    print(p[0])
+
+    #X = np.array([[-3],[-2],[3],[2]])
+    #z = np.zeros((2, 1))
+    #o = np.ones((2, 1))
+    #Y = np.concatenate((z, o), axis=0)
+
+    #nn = NeuralNet()
+    #nn.fit(X, Y, None, 1, 20, 'BGD')
     #plt.scatter(X[Y.flatten() == 0][:, 0], X[Y.flatten() == 0][:, 1])
     #plt.scatter(X[Y.flatten() == 1][:, 0], X[Y.flatten() == 1][:, 1])
-    print("weights: "+str(nn.weights))
-    print("bias: " + str(nn.bias))
-    print("pred:")
-    print(nn.forward(X.T)[0])
+    #print("weights: "+str(nn.weights))
+    #print("bias: " + str(nn.bias))
+    #print("pred:")
+    #print(nn.forward(X.T)[0])
     #plt.show()
 
 def convertToOneHot(vector, num_classes=None):

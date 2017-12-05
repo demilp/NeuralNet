@@ -60,7 +60,7 @@ class NeuralNet:
 
             dz = da * a * (1-a)
             m = w.shape[1]
-            dw = 1./m * dz.dot(activations[d].T)
+            dw = 1./m * dz.dot(activations[d-1].T)
             db = 1./m * np.sum(dz, axis=1, keepdims=True)
             da = w.T.dot(dz)
             dws.insert(0, dw)
@@ -79,8 +79,8 @@ class NeuralNet:
             for w in np.arange(1, len(self.weights)):
                 self.weights[w] = self.weights[w] - learning_rate * dw[w]
                 self.bias[w] = self.bias[w] - learning_rate * db[w]
-            #if i%10==0:
-            print(self.cost(X, y))
+            if i%10==0:
+                print(self.cost(X, y))
 
     def MBGD(self, X, y, learning_rate, epochs):
         m = X.shape[0]
